@@ -19,18 +19,26 @@ return {
     vim.api.nvim_create_autocmd("LspAttach", {
       group = vim.api.nvim_create_augroup("user-lsp-attach", { clear = true }),
       callback = function(event)
-        local map = function(keys, func, desc)
-          vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+        local map = function(mode, keys, func, desc)
+          vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
         end
-        map("gd", vim.lsp.buf.definition, "Go to definition")
-        map("gD", vim.lsp.buf.declaration, "Go to declaration")
-        map("gr", vim.lsp.buf.references, "Go to references")
-        map("gi", vim.lsp.buf.implementation, "Go to implementation")
-        map("K", vim.lsp.buf.hover, "Hover")
-        map("<leader>rn", vim.lsp.buf.rename, "Rename")
-        map("<leader>ca", vim.lsp.buf.code_action, "Code action")
-        map("[d", function() vim.diagnostic.jump({ count = -1 }) end, "Diagnóstico anterior")
-        map("]d", function() vim.diagnostic.jump({ count = 1 }) end, "Próximo diagnóstico")
+        -- Estilo Leader (vim-like)
+        map("n", "gd", vim.lsp.buf.definition, "Go to definition")
+        map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
+        map("n", "gr", vim.lsp.buf.references, "Go to references")
+        map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
+        map("n", "K", vim.lsp.buf.hover, "Hover")
+        map("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
+        map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
+        map("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, "Diagnóstico anterior")
+        map("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, "Próximo diagnóstico")
+        -- Estilo VSCode
+        map("n", "<F12>", vim.lsp.buf.definition, "Go to Definition")
+        map("n", "<S-F12>", vim.lsp.buf.references, "Find All References")
+        map("n", "<C-F12>", vim.lsp.buf.implementation, "Go to Implementation")
+        map("n", "<F2>", vim.lsp.buf.rename, "Rename Symbol")
+        map({ "n", "v" }, "<C-.>", vim.lsp.buf.code_action, "Quick Fix / Code Action")
+        map("n", "<C-h>", vim.lsp.buf.hover, "Show Hover")
       end,
     })
 

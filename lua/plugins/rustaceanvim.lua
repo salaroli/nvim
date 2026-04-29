@@ -12,18 +12,23 @@ return {
       server = {
         capabilities = require("blink.cmp").get_lsp_capabilities(),
         on_attach = function(_, bufnr)
-          local map = function(keys, func, desc)
-            vim.keymap.set("n", keys, func, { buffer = bufnr, desc = "Rust: " .. desc })
+          local map = function(mode, keys, func, desc)
+            vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = "Rust: " .. desc })
           end
-          map("<leader>rr", function() vim.cmd.RustLsp("runnables") end, "Runnables")
-          map("<leader>rt", function() vim.cmd.RustLsp("testables") end, "Testables")
-          map("<leader>rd", function() vim.cmd.RustLsp("debuggables") end, "Debuggables")
-          map("<leader>rm", function() vim.cmd.RustLsp("expandMacro") end, "Expand macro")
-          map("<leader>rc", function() vim.cmd.RustLsp("openCargo") end, "Open Cargo.toml")
-          map("<leader>rp", function() vim.cmd.RustLsp("parentModule") end, "Parent module")
-          map("<leader>re", function() vim.cmd.RustLsp("explainError") end, "Explain error")
-          map("K", function() vim.cmd.RustLsp({ "hover", "actions" }) end, "Hover actions")
-          map("<leader>ca", function() vim.cmd.RustLsp("codeAction") end, "Code action")
+          -- Leader-style
+          map("n", "<leader>rr", function() vim.cmd.RustLsp("runnables") end, "Runnables")
+          map("n", "<leader>rt", function() vim.cmd.RustLsp("testables") end, "Testables")
+          map("n", "<leader>rd", function() vim.cmd.RustLsp("debuggables") end, "Debuggables")
+          map("n", "<leader>rm", function() vim.cmd.RustLsp("expandMacro") end, "Expand macro")
+          map("n", "<leader>rc", function() vim.cmd.RustLsp("openCargo") end, "Open Cargo.toml")
+          map("n", "<leader>rp", function() vim.cmd.RustLsp("parentModule") end, "Parent module")
+          map("n", "<leader>re", function() vim.cmd.RustLsp("explainError") end, "Explain error")
+          map("n", "K", function() vim.cmd.RustLsp({ "hover", "actions" }) end, "Hover actions")
+          map("n", "<leader>ca", function() vim.cmd.RustLsp("codeAction") end, "Code action")
+          -- VSCode-style
+          map({ "n", "v" }, "<C-.>", function() vim.cmd.RustLsp("codeAction") end, "Quick Fix / Code Action")
+          map("n", "<C-h>", function() vim.cmd.RustLsp({ "hover", "actions" }) end, "Show Hover")
+          map("n", "<F5>", function() vim.cmd.RustLsp("debuggables") end, "Start Debugging")
         end,
         default_settings = {
           ["rust-analyzer"] = {

@@ -10,6 +10,9 @@ return {
   keys = {
     { "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Toggle Neo-tree" },
     { "<leader>o", "<cmd>Neotree focus<cr>", desc = "Focus Neo-tree" },
+    -- Estilo VSCode
+    { "<C-b>", "<cmd>Neotree toggle<cr>", desc = "Toggle sidebar (Explorer)" },
+    { "<C-S-e>", "<cmd>Neotree focus<cr>", desc = "Show Explorer" },
   },
   opts = {
     close_if_last_window = true,
