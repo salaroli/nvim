@@ -5,7 +5,6 @@ return {
     "saghen/blink.cmp",
   },
   config = function()
-    local lspconfig = require("lspconfig")
     local capabilities = require("blink.cmp").get_lsp_capabilities()
 
     vim.diagnostic.config({
@@ -42,6 +41,13 @@ return {
       end,
     })
 
+    -- Default capabilities aplicadas a todos os servidores via vim.lsp.config('*', ...)
+    vim.lsp.config("*", {
+      capabilities = capabilities,
+    })
+
+    -- Configs por servidor (mescladas com os defaults vindos de nvim-lspconfig)
+    -- rust_analyzer é gerenciado pelo rustaceanvim, por isso não está aqui.
     local servers = {
       -- Frontend / Web
       ts_ls = {},
@@ -52,7 +58,7 @@ return {
       jsonls = {},
       volar = {},
       emmet_language_server = {},
-      -- Embedded / Sistemas (rust_analyzer é gerenciado pelo rustaceanvim)
+      -- Embedded / Sistemas
       clangd = {
         cmd = { "clangd", "--background-index", "--clang-tidy", "--header-insertion=iwyu" },
       },
@@ -78,8 +84,13 @@ return {
     }
 
     for server, config in pairs(servers) do
-      config.capabilities = vim.tbl_deep_extend("force", {}, capabilities, config.capabilities or {})
-      lspconfig[server].setup(config)
+      vim.lsp.config(server, config)
     end
+
+    local server_names = {}
+    for name in pairs(servers) do
+      table.insert(server_names, name)
+    end
+    vim.lsp.enable(server_names)
   end,
 }

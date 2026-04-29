@@ -20,9 +20,6 @@ map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Mover seleção para cima" })
 -- Atalhos estilo VSCode
 -- =========================================================================
 
--- Ctrl+S: Salvar
-map({ "n", "v", "i", "x" }, "<C-s>", "<cmd>w<CR>", { desc = "Salvar arquivo" })
-
 -- Ctrl+G: Ir para linha
 map("n", "<C-g>", ":", { desc = "Linha de comando (ir para linha)" })
 
