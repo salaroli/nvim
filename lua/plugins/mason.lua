@@ -34,13 +34,40 @@ return {
         "emmet_language_server",
         -- Embedded / Sistemas
         "clangd",
-        "rust_analyzer",
         "cmake",
-        "pyright",
-        -- Lua (config)
+        -- Linguagens "clássicas" do Linux
+        "bashls",
         "lua_ls",
+        "pyright",
+        "ruff",
+        "marksman",
+        "taplo",
+        "yamlls",
+        "dockerls",
       },
       automatic_installation = true,
+    },
+  },
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = { "mason-org/mason.nvim" },
+    opts = {
+      ensure_installed = {
+        -- Formatters
+        "stylua",
+        "prettierd",
+        "prettier",
+        "shfmt",
+        "clang-format",
+        "cmakelang",
+        -- Linters
+        "shellcheck",
+        -- Debug (Rust embedded / C / C++)
+        "codelldb",
+      },
+      auto_update = false,
+      run_on_start = true,
     },
   },
 }

@@ -35,6 +35,7 @@ return {
     })
 
     local servers = {
+      -- Frontend / Web
       ts_ls = {},
       eslint = {},
       html = {},
@@ -43,28 +44,29 @@ return {
       jsonls = {},
       volar = {},
       emmet_language_server = {},
+      -- Embedded / Sistemas (rust_analyzer é gerenciado pelo rustaceanvim)
       clangd = {
         cmd = { "clangd", "--background-index", "--clang-tidy", "--header-insertion=iwyu" },
       },
-      rust_analyzer = {
-        settings = {
-          ["rust-analyzer"] = {
-            cargo = { allFeatures = true },
-            checkOnSave = { command = "clippy" },
-          },
-        },
-      },
       cmake = {},
+      -- Linux / scripting
+      bashls = {},
       pyright = {},
+      ruff = {},
       lua_ls = {
         settings = {
           Lua = {
             workspace = { checkThirdParty = false },
             telemetry = { enable = false },
             diagnostics = { globals = { "vim" } },
+            completion = { callSnippet = "Replace" },
           },
         },
       },
+      marksman = {},
+      taplo = {},
+      yamlls = {},
+      dockerls = {},
     }
 
     for server, config in pairs(servers) do
