@@ -62,6 +62,15 @@ return {
       clangd = {
         cmd = { "clangd", "--background-index", "--clang-tidy", "--header-insertion=iwyu" },
       },
+      arduino_language_server = {
+        cmd = {
+          "arduino-language-server",
+          "-clangd", vim.fn.exepath("clangd"),
+          "-cli", vim.fn.exepath("arduino-cli"),
+          "-cli-config", vim.fn.expand("$HOME/.arduino15/arduino-cli.yaml"),
+          "-fqbn", "arduino:avr:uno",
+        },
+      },
       -- Linux / scripting
       bashls = {},
       pyright = {},
