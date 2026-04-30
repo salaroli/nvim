@@ -2,6 +2,14 @@ local map = vim.keymap.set
 
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Limpar highlight de busca" })
 
+map("n", "<C-h>", "<C-w>h", { desc = "Janela esquerda" })
+map("n", "<C-j>", "<C-w>j", { desc = "Janela abaixo" })
+map("n", "<C-k>", "<C-w>k", { desc = "Janela acima" })
+map("n", "<C-l>", "<C-w>l", { desc = "Janela direita" })
+map("n", "<C-v>", "<cmd>vsplit<CR>", { desc = "Split vertical" })
+map("n", "<C-s>", "<cmd>split<CR>", { desc = "Split horizontal" })
+map("n", "<C-q>", "<cmd>q<CR>", { desc = "Fechar janela/split" })
+
 
 map("n", "<leader>q", "<cmd>q<CR>", { desc = "Fechar janela/split" })
 
