@@ -22,6 +22,7 @@ return {
   keys = {
     { "<S-h>", "<cmd>BufferLineCyclePrev<CR>", desc = "Buffer anterior" },
     { "<S-l>", "<cmd>BufferLineCycleNext<CR>", desc = "Próximo buffer" },
+    { "<leader>bn", "<cmd>enew<CR>", desc = "Novo buffer" },
     { "<leader>bq", "<cmd>bdelete<CR>", desc = "Fechar buffer" },
     { "<leader>bp", "<cmd>BufferLineTogglePin<CR>", desc = "Fixar buffer" },
   },
