@@ -8,14 +8,17 @@ map("n", "<C-k>", "<C-w>k", { desc = "Janela acima" })
 map("n", "<C-l>", "<C-w>l", { desc = "Janela direita" })
 
 
+-- Splits standalone
+map("n", "<leader>h", "<cmd>split<CR>", { desc = "Split horizontal" })
+map("n", "<leader>v", "<cmd>vsplit<CR>", { desc = "Split vertical" })
 map("n", "<leader>q", "<cmd>q<CR>", { desc = "Fechar janela/split" })
 
-map("n", "<leader>wh", "<C-w>h", { desc = "Janela esquerda" })
+-- Janelas via which-key (leader+w)
 map("n", "<leader>wj", "<C-w>j", { desc = "Janela abaixo" })
 map("n", "<leader>wk", "<C-w>k", { desc = "Janela acima" })
 map("n", "<leader>wl", "<C-w>l", { desc = "Janela direita" })
+map("n", "<leader>wh", "<cmd>split<CR>", { desc = "Split horizontal" })
 map("n", "<leader>wv", "<cmd>vsplit<CR>", { desc = "Split vertical" })
-map("n", "<leader>ws", "<cmd>split<CR>", { desc = "Split horizontal" })
 map("n", "<leader>wq", "<cmd>q<CR>", { desc = "Fechar janela/split" })
 
 map("v", "<", "<gv", { desc = "Indentar esquerda" })

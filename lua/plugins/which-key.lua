@@ -3,6 +3,9 @@ return {
   event = "VeryLazy",
   opts = {
     preset = "modern",
+    spec = {
+      { "<leader>w", group = "Janelas" },
+    },
   },
   keys = {
     {
