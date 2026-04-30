@@ -8,7 +8,7 @@ map("n", "<C-k>", "<C-w>k", { desc = "Janela acima" })
 map("n", "<C-l>", "<C-w>l", { desc = "Janela direita" })
 
 map("n", "<leader>w", "<cmd>w<CR>", { desc = "Salvar arquivo" })
-map("n", "<leader>q", "<cmd>q<CR>", { desc = "Fechar janela" })
+map("n", "<leader>q", "<cmd>q<CR>", { desc = "Fechar janela/split" })
 
 map("n", "<leader>v", "<cmd>vsplit<CR>", { desc = "Split vertical" })
 map("n", "<leader>h", "<cmd>split<CR>", { desc = "Split horizontal" })
