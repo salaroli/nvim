@@ -56,7 +56,7 @@ return {
       cssls = {},
       tailwindcss = {},
       jsonls = {},
-      volar = {},
+      vue_ls = {},
       emmet_language_server = {},
       -- Embedded / Sistemas
       clangd = {
@@ -86,11 +86,7 @@ return {
     for server, config in pairs(servers) do
       vim.lsp.config(server, config)
     end
-
-    local server_names = {}
-    for name in pairs(servers) do
-      table.insert(server_names, name)
-    end
-    vim.lsp.enable(server_names)
+    -- mason-lspconfig.nvim cuida de chamar vim.lsp.enable() para tudo que
+    -- estiver em ensure_installed (automatic_enable é default em v2).
   end,
 }
