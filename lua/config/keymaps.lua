@@ -7,6 +7,11 @@ map("n", "<C-j>", "<C-w>j", { desc = "Janela abaixo" })
 map("n", "<C-k>", "<C-w>k", { desc = "Janela acima" })
 map("n", "<C-l>", "<C-w>l", { desc = "Janela direita" })
 
+map("n", "<C-S-h>", "<cmd>vertical resize -2<CR>", { desc = "Diminuir largura" })
+map("n", "<C-S-l>", "<cmd>vertical resize +2<CR>", { desc = "Aumentar largura" })
+map("n", "<C-S-j>", "<cmd>resize -2<CR>", { desc = "Diminuir altura" })
+map("n", "<C-S-k>", "<cmd>resize +2<CR>", { desc = "Aumentar altura" })
+
 
 -- Splits standalone
 map("n", "<leader>h", "<cmd>split<CR>", { desc = "Split horizontal" })
