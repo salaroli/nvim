@@ -1,36 +1,32 @@
+-- nvim-treesitter `main` branch (rewrite). Required for Neovim 0.12+ —
+-- the legacy `master` branch was archived and crashes on 0.12 with
+-- "attempt to call method 'range' (a nil value)" inside query_predicates.lua.
 return {
   "nvim-treesitter/nvim-treesitter",
-  branch = "master",
-  build = function()
-    require("nvim-treesitter.install").update({ with_sync = true })()
-  end,
-  event = { "BufReadPost", "BufNewFile" },
-  cmd = { "TSInstall", "TSUpdate", "TSUpdateSync" },
-  opts = {
-    -- Lista mínima: só o essencial para editar a própria config.
-    -- O resto é instalado automaticamente quando você abre um arquivo
-    -- do filetype correspondente (auto_install).
-    ensure_installed = {
-      "lua",
-      "vim",
-      "vimdoc",
-      "query",
-    },
-    sync_install = false,
-    auto_install = true,
-    highlight = { enable = true },
-    indent = { enable = true },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = "<C-space>",
-        node_incremental = "<C-space>",
-        scope_incremental = false,
-        node_decremental = "<bs>",
-      },
-    },
-  },
-  config = function(_, opts)
-    require("nvim-treesitter.configs").setup(opts)
+  branch = "main",
+  lazy = false,
+  build = ":TSUpdate",
+  config = function()
+    local ensure_installed = { "lua", "vim", "vimdoc", "query" }
+
+    require("nvim-treesitter").install(ensure_installed)
+
+    vim.api.nvim_create_autocmd("FileType", {
+      callback = function(args)
+        local ft = vim.bo[args.buf].filetype
+        local lang = vim.treesitter.language.get_lang(ft)
+        if not lang then
+          return
+        end
+
+        if not pcall(vim.treesitter.language.add, lang) then
+          require("nvim-treesitter").install({ lang })
+          return
+        end
+
+        pcall(vim.treesitter.start, args.buf, lang)
+        vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      end,
+    })
   end,
 }
