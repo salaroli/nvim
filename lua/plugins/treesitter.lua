@@ -1,39 +1,23 @@
 return {
   "nvim-treesitter/nvim-treesitter",
-  build = ":TSUpdate",
+  branch = "master",
+  build = function()
+    require("nvim-treesitter.install").update({ with_sync = true })()
+  end,
   event = { "BufReadPost", "BufNewFile" },
   cmd = { "TSInstall", "TSUpdate", "TSUpdateSync" },
   opts = {
+    -- Lista mínima: só o essencial para editar a própria config.
+    -- O resto é instalado automaticamente quando você abre um arquivo
+    -- do filetype correspondente (auto_install).
     ensure_installed = {
       "lua",
       "vim",
       "vimdoc",
       "query",
-      "bash",
-      "javascript",
-      "typescript",
-      "tsx",
-      "html",
-      "css",
-      "scss",
-      "json",
-      "jsonc",
-      "yaml",
-      "toml",
-      "markdown",
-      "markdown_inline",
-      "regex",
-      "c",
-      "cpp",
-      "rust",
-      "cmake",
-      "make",
-      "python",
-      "dockerfile",
-      "gitignore",
-      "git_config",
-      "diff",
     },
+    sync_install = false,
+    auto_install = true,
     highlight = { enable = true },
     indent = { enable = true },
     incremental_selection = {

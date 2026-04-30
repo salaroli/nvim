@@ -30,11 +30,10 @@ return {
         "cssls",
         "tailwindcss",
         "jsonls",
-        "volar",
+        "vue_ls",
         "emmet_language_server",
         -- Embedded / Sistemas
         "clangd",
-        "cmake",
         -- Linguagens "clássicas" do Linux
         "bashls",
         "lua_ls",
@@ -45,7 +44,6 @@ return {
         "yamlls",
         "dockerls",
       },
-      automatic_installation = true,
     },
   },
   {
