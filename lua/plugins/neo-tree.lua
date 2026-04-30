@@ -8,6 +8,7 @@ return {
     "MunifTanjim/nui.nvim",
   },
   keys = {
+    { "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Toggle Neo-tree" },
     { "<C-b>", "<cmd>Neotree toggle<cr>", desc = "Toggle sidebar (Explorer)" },
     { "<C-S-e>", "<cmd>Neotree focus<cr>", desc = "Show Explorer" },
   },
