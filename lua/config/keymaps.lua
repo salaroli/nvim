@@ -2,16 +2,16 @@ local map = vim.keymap.set
 
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Limpar highlight de busca" })
 
-map("n", "<C-h>", "<C-w>h", { desc = "Janela esquerda" })
-map("n", "<C-j>", "<C-w>j", { desc = "Janela abaixo" })
-map("n", "<C-k>", "<C-w>k", { desc = "Janela acima" })
-map("n", "<C-l>", "<C-w>l", { desc = "Janela direita" })
 
-map("n", "<leader>w", "<cmd>w<CR>", { desc = "Salvar arquivo" })
 map("n", "<leader>q", "<cmd>q<CR>", { desc = "Fechar janela/split" })
 
-map("n", "<leader>v", "<cmd>vsplit<CR>", { desc = "Split vertical" })
-map("n", "<leader>h", "<cmd>split<CR>", { desc = "Split horizontal" })
+map("n", "<leader>wh", "<C-w>h", { desc = "Janela esquerda" })
+map("n", "<leader>wj", "<C-w>j", { desc = "Janela abaixo" })
+map("n", "<leader>wk", "<C-w>k", { desc = "Janela acima" })
+map("n", "<leader>wl", "<C-w>l", { desc = "Janela direita" })
+map("n", "<leader>wv", "<cmd>vsplit<CR>", { desc = "Split vertical" })
+map("n", "<leader>ws", "<cmd>split<CR>", { desc = "Split horizontal" })
+map("n", "<leader>wq", "<cmd>q<CR>", { desc = "Fechar janela/split" })
 
 map("v", "<", "<gv", { desc = "Indentar esquerda" })
 map("v", ">", ">gv", { desc = "Indentar direita" })
