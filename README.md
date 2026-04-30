@@ -61,6 +61,44 @@ A maioria dos LSPs/formatters/linters é instalada via Mason **dentro do Neovim*
 |---|---|
 | **clangd** (sistema) | C/C++ LSP — Mason baixa, mas a versão do sistema costuma ser melhor para projetos com `compile_commands.json` |
 | **lldb** | debug C/C++/Rust (rustaceanvim usa `codelldb` via Mason) |
+| **`arduino-cli`** (sistema) | obrigatório para o `arduino-language-server` funcionar — o Mason instala o servidor mas não o CLI |
+
+### Para Arduino (arquivos `.ino`)
+
+O `arduino-language-server` é instalado automaticamente pelo Mason, mas depende de dois binários do **sistema**:
+
+- `arduino-cli` — gerencia cores, bibliotecas e gera o `compile_commands.json` que o LSP usa
+- `clangd` — já instalado pelo Mason
+
+**Instalação do `arduino-cli`:**
+
+| Plataforma | Comando |
+|---|---|
+| Arch Linux | `yay -S arduino-cli` (AUR) |
+| Ubuntu / Debian | ver bloco abaixo |
+| Fedora | ver bloco abaixo |
+| macOS | `brew install arduino-cli` |
+
+Ubuntu / Debian e Fedora (sem pacote oficial no gerenciador):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh -s -- --bindir ~/.local/bin
+```
+
+**Pós-instalação (qualquer plataforma):**
+
+```bash
+arduino-cli config init
+arduino-cli core update-index
+
+# Instale o core da sua placa — exemplos:
+arduino-cli core install arduino:avr        # Uno, Nano, Mega
+arduino-cli core install arduino:megaavr    # Nano Every
+arduino-cli core install arduino:mbed_nano  # Nano 33 IoT / BLE
+arduino-cli core install esp32:esp32        # ESP32
+```
+
+> **Board padrão (`-fqbn`):** a config usa `arduino:avr:uno` por padrão. Para trocar para outro board, edite a linha `-fqbn` em `lua/plugins/lspconfig.lua`.
 
 ---
 
@@ -330,6 +368,16 @@ Para adicionar um novo plugin: crie `lua/plugins/<nome>.lua` retornando uma spec
 
 ## Troubleshooting
 
+### Arduino LSP não inicia (`arduino-language-server` travado)
+
+Causas comuns e soluções:
+
+- **`arduino-cli` não encontrado no PATH** → instale conforme a seção [Para Arduino](#para-arduino-arquivos-ino) e confirme com `which arduino-cli`
+- **Core da placa não instalado** → rode `arduino-cli core install arduino:avr` (ou o core da sua placa)
+- **`-cli-config` não existe** → rode `arduino-cli config init` para gerar o arquivo de configuração
+- **Board errado** → edite `-fqbn` em `lua/plugins/lspconfig.lua`; para listar boards instalados: `arduino-cli board listall`
+- **Ver log do LSP** → `:LspLog` dentro do nvim
+
 ### Mason: "failed to install <X>"
 
 Roda `:MasonLog` para ver o erro real. Causas comuns:
@@ -382,3 +430,4 @@ Falta Nerd Font ativa no terminal. Veja a seção [Nerd Font](#nerd-font).
 - **`automatic_enable` do mason-lspconfig v2** está ativo por default, então não há `vim.lsp.enable()` manual.
 - **Treesitter está no `branch = "main"`** (rewrite). O branch legado `master` foi arquivado em abr/2026 e quebra em Neovim 0.12 (`attempt to call method 'range' ...`). Não há `configs.setup{}` no `main` — highlight/indent são ligados via autocmd `FileType` em `lua/plugins/treesitter.lua`. Parsers são compilados pelo CLI `tree-sitter` (requisito novo).
 - **`format_on_save`** está ativo (1s timeout). Para desativar pontualmente: `:noautocmd w`.
+- **Arduino LSP (`arduino_language_server`)** usa `-fqbn arduino:avr:uno` como board padrão. Mude em `lua/plugins/lspconfig.lua` conforme a placa do projeto. O `arduino-cli` precisa estar no PATH do sistema; o Mason instala apenas o servidor em si.
