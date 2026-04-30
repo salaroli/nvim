@@ -37,7 +37,6 @@ return {
         map("n", "<C-F12>", vim.lsp.buf.implementation, "Go to Implementation")
         map("n", "<F2>", vim.lsp.buf.rename, "Rename Symbol")
         map({ "n", "v" }, "<C-.>", vim.lsp.buf.code_action, "Quick Fix / Code Action")
-        map("n", "<C-h>", vim.lsp.buf.hover, "Show Hover")
       end,
     })
 
@@ -80,7 +79,6 @@ return {
           Lua = {
             workspace = { checkThirdParty = false },
             telemetry = { enable = false },
-            diagnostics = { globals = { "vim" } },
             completion = { callSnippet = "Replace" },
           },
         },
