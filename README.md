@@ -13,7 +13,7 @@ Configuração pessoal do Neovim usando [`lazy.nvim`](https://github.com/folke/l
 | Statusline | `lualine` (tema `tokyonight`) |
 | Fuzzy finder | `telescope.nvim` + `fzf-native` |
 | File explorer | `neo-tree.nvim` |
-| Sintaxe | `nvim-treesitter` (branch `master`) |
+| Sintaxe | `nvim-treesitter` (branch `main`) |
 | LSP | `nvim-lspconfig` + `mason.nvim` + `mason-lspconfig` |
 | Completion | `blink.cmp` v1 |
 | Formatter | `conform.nvim` |
@@ -31,10 +31,12 @@ A maioria dos LSPs/formatters/linters é instalada via Mason **dentro do Neovim*
 
 | Item | Para quê |
 |---|---|
-| **Neovim ≥ 0.11** | API `vim.lsp.config` / `vim.lsp.enable` |
+| **Neovim ≥ 0.12** | nvim-treesitter `main` exige 0.12+ |
 | **git** | clonar plugins |
 | **C compiler** (`gcc` ou `clang`) | compilar parsers do treesitter |
-| **make** | build do `telescope-fzf-native` e treesitter |
+| **make** | build do `telescope-fzf-native` |
+| **`tree-sitter` CLI** | nvim-treesitter `main` usa o CLI oficial pra compilar parsers |
+| **Node.js** | alguns grammars do treesitter geram código via `node` antes de compilar |
 | **unzip** + **curl** ou **wget** | Mason baixa pacotes |
 | **Nerd Font** no terminal | ícones do `web-devicons`, `lualine`, `neo-tree` |
 
@@ -69,6 +71,7 @@ A maioria dos LSPs/formatters/linters é instalada via Mason **dentro do Neovim*
 ```bash
 sudo pacman -S \
   neovim git base-devel \
+  tree-sitter-cli \
   ripgrep fd \
   nodejs npm \
   python python-pip \
@@ -109,9 +112,12 @@ sudo apt install -y \
 mkdir -p ~/.local/bin
 ln -s "$(which fdfind)" ~/.local/bin/fd
 
-# Node LTS (mais novo que o do apt)
+# Node LTS (mais novo que o do apt) — também usado pelo treesitter
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
+
+# tree-sitter CLI (não está no apt) — via npm:
+sudo npm install -g tree-sitter-cli
 
 # Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -127,6 +133,9 @@ sudo dnf install -y \
   python3 python3-pip \
   unzip wget
 
+# tree-sitter CLI (Fedora não tem pacote oficial) — via npm:
+sudo npm install -g tree-sitter-cli
+
 # Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
@@ -141,6 +150,9 @@ sudo zypper install -y \
   python3 python3-pip \
   unzip curl
 
+# tree-sitter CLI via npm:
+sudo npm install -g tree-sitter-cli
+
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
@@ -152,6 +164,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 brew install \
   neovim git \
+  tree-sitter \
   ripgrep fd \
   node \
   python \
@@ -161,6 +174,8 @@ rustup-init -y
 ```
 
 > **Compilador no macOS**: `xcode-select --install` instala `clang` + `make` (necessários para treesitter).
+>
+> O Homebrew chama o pacote do CLI de `tree-sitter` (sem `-cli`). Confirma com `which tree-sitter` — tem que retornar um caminho.
 
 ### Windows (WSL recomendado)
 
@@ -201,7 +216,7 @@ Na primeira execução:
 1. `lazy.nvim` se auto-instala em `~/.local/share/nvim/lazy/`
 2. Todos os plugins são clonados
 3. Mason começa a instalar LSPs/formatters/linters em background
-4. Treesitter compila os parsers básicos (lua, vim, vimdoc, query); os demais são instalados sob demanda quando você abre arquivos do filetype correspondente (`auto_install = true`)
+4. Treesitter compila os parsers básicos (lua, vim, vimdoc, query) via o CLI `tree-sitter`; os demais são instalados sob demanda quando você abre um arquivo do filetype correspondente
 
 Comandos úteis depois:
 
@@ -333,20 +348,23 @@ Rate limit do GitHub ou rede. Tenta:
 :TSUpdate                 " atualiza todos
 ```
 
+### Treesitter: `ENOENT: ... 'tree-sitter'`
+
+Falta o CLI `tree-sitter` no PATH. Veja a tabela de pré-requisitos — instale via gerenciador (`brew install tree-sitter`, `pacman -S tree-sitter-cli`) ou `npm install -g tree-sitter-cli`. Reabra o nvim depois.
+
 ### Treesitter: "attempt to call method 'range' (a nil value)"
 
-Parsers desatualizados em relação ao plugin. Resolve com:
+Acontecia com o branch legado `master` (arquivado). A config já está no branch `main`. Se ainda ver isso, é parser velho do `master` em cache — resolve com:
 
-```vim
-:TSUpdate
+```bash
+rm -rf ~/.local/share/nvim/lazy/nvim-treesitter/parser
 ```
 
-Ou, se persistir:
+E depois `:TSUpdate` no nvim.
 
-```vim
-:TSUninstall all
-:TSUpdate
-```
+### Treesitter: `Query error ... Invalid field name`
+
+Mismatch entre query nova e parser velho. Mesmo fix do item acima: apaga `~/.local/share/nvim/lazy/nvim-treesitter/parser` e roda `:TSUpdate`.
 
 ### `Ctrl+/` não comenta
 
@@ -362,5 +380,5 @@ Falta Nerd Font ativa no terminal. Veja a seção [Nerd Font](#nerd-font).
 
 - **`rust_analyzer` não está em `mason.lua` nem em `lspconfig.lua`** — é gerenciado pelo `rustaceanvim`, que evita duplo attach.
 - **`automatic_enable` do mason-lspconfig v2** está ativo por default, então não há `vim.lsp.enable()` manual.
-- **Treesitter está pinado em `branch = "master"`** porque a v1.0 (no branch `main`) reescreveu a API e quebra o `configs.setup{}` deste config.
+- **Treesitter está no `branch = "main"`** (rewrite). O branch legado `master` foi arquivado em abr/2026 e quebra em Neovim 0.12 (`attempt to call method 'range' ...`). Não há `configs.setup{}` no `main` — highlight/indent são ligados via autocmd `FileType` em `lua/plugins/treesitter.lua`. Parsers são compilados pelo CLI `tree-sitter` (requisito novo).
 - **`format_on_save`** está ativo (1s timeout). Para desativar pontualmente: `:noautocmd w`.
