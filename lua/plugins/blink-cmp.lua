@@ -6,11 +6,22 @@ return {
     "rafamadriz/friendly-snippets",
   },
   opts = {
-    keymap = { preset = "default" },
+    keymap = {
+      preset = "default",
+      ["<Tab>"] = { "snippet_forward", "select_next", "fallback" },
+      ["<S-Tab>"] = { "snippet_backward", "select_prev", "fallback" },
+      ["<CR>"] = { "accept", "fallback" },
+    },
     appearance = {
       nerd_font_variant = "mono",
     },
     completion = {
+      trigger = {
+        show_on_insert_on_trigger_character = true,
+        show_after_delay_ms = 0,
+      },
+      list = { selection = { preselect = true, auto_insert = false } },
+      menu = { auto_show = true },
       documentation = { auto_show = true, auto_show_delay_ms = 200 },
       ghost_text = { enabled = true },
     },
