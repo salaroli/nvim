@@ -5,7 +5,6 @@ return {
     "saghen/blink.cmp",
   },
   config = function()
-    local lspconfig = require("lspconfig")
     local capabilities = require("blink.cmp").get_lsp_capabilities()
 
     vim.diagnostic.config({
@@ -19,21 +18,36 @@ return {
     vim.api.nvim_create_autocmd("LspAttach", {
       group = vim.api.nvim_create_augroup("user-lsp-attach", { clear = true }),
       callback = function(event)
-        local map = function(keys, func, desc)
-          vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+        local map = function(mode, keys, func, desc)
+          vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
         end
-        map("gd", vim.lsp.buf.definition, "Go to definition")
-        map("gD", vim.lsp.buf.declaration, "Go to declaration")
-        map("gr", vim.lsp.buf.references, "Go to references")
-        map("gi", vim.lsp.buf.implementation, "Go to implementation")
-        map("K", vim.lsp.buf.hover, "Hover")
-        map("<leader>rn", vim.lsp.buf.rename, "Rename")
-        map("<leader>ca", vim.lsp.buf.code_action, "Code action")
-        map("[d", function() vim.diagnostic.jump({ count = -1 }) end, "Diagnóstico anterior")
-        map("]d", function() vim.diagnostic.jump({ count = 1 }) end, "Próximo diagnóstico")
+        -- Estilo Leader (vim-like)
+        map("n", "gd", vim.lsp.buf.definition, "Go to definition")
+        map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
+        map("n", "gr", vim.lsp.buf.references, "Go to references")
+        map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
+        map("n", "K", vim.lsp.buf.hover, "Hover")
+        map("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
+        map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
+        map("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, "Diagnóstico anterior")
+        map("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, "Próximo diagnóstico")
+        -- Estilo VSCode
+        map("n", "<F12>", vim.lsp.buf.definition, "Go to Definition")
+        map("n", "<S-F12>", vim.lsp.buf.references, "Find All References")
+        map("n", "<C-F12>", vim.lsp.buf.implementation, "Go to Implementation")
+        map("n", "<F2>", vim.lsp.buf.rename, "Rename Symbol")
+        map({ "n", "v" }, "<C-.>", vim.lsp.buf.code_action, "Quick Fix / Code Action")
+        map("n", "<C-h>", vim.lsp.buf.hover, "Show Hover")
       end,
     })
 
+    -- Default capabilities aplicadas a todos os servidores via vim.lsp.config('*', ...)
+    vim.lsp.config("*", {
+      capabilities = capabilities,
+    })
+
+    -- Configs por servidor (mescladas com os defaults vindos de nvim-lspconfig)
+    -- rust_analyzer é gerenciado pelo rustaceanvim, por isso não está aqui.
     local servers = {
       -- Frontend / Web
       ts_ls = {},
@@ -42,13 +56,12 @@ return {
       cssls = {},
       tailwindcss = {},
       jsonls = {},
-      volar = {},
+      vue_ls = {},
       emmet_language_server = {},
-      -- Embedded / Sistemas (rust_analyzer é gerenciado pelo rustaceanvim)
+      -- Embedded / Sistemas
       clangd = {
         cmd = { "clangd", "--background-index", "--clang-tidy", "--header-insertion=iwyu" },
       },
-      cmake = {},
       -- Linux / scripting
       bashls = {},
       pyright = {},
@@ -70,8 +83,9 @@ return {
     }
 
     for server, config in pairs(servers) do
-      config.capabilities = vim.tbl_deep_extend("force", {}, capabilities, config.capabilities or {})
-      lspconfig[server].setup(config)
+      vim.lsp.config(server, config)
     end
+    -- mason-lspconfig.nvim cuida de chamar vim.lsp.enable() para tudo que
+    -- estiver em ensure_installed (automatic_enable é default em v2).
   end,
 }
