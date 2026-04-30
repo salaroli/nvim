@@ -62,7 +62,6 @@ return {
       clangd = {
         cmd = { "clangd", "--background-index", "--clang-tidy", "--header-insertion=iwyu" },
       },
-      cmake = {},
       -- Linux / scripting
       bashls = {},
       pyright = {},

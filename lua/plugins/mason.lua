@@ -34,7 +34,6 @@ return {
         "emmet_language_server",
         -- Embedded / Sistemas
         "clangd",
-        "cmake",
         -- Linguagens "clássicas" do Linux
         "bashls",
         "lua_ls",
