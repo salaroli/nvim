@@ -7,7 +7,7 @@ return {
   lazy = false,
   build = ":TSUpdate",
   config = function()
-    local ensure_installed = { "lua", "vim", "vimdoc", "query" }
+    local ensure_installed = { "lua", "vim", "vimdoc", "query", "css", "scss" }
 
     require("nvim-treesitter").install(ensure_installed)
 
@@ -19,13 +19,31 @@ return {
           return
         end
 
+        local function start_hl(bufnr)
+          if pcall(vim.treesitter.start, bufnr, lang) then
+            vim.bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end
+
         if not pcall(vim.treesitter.language.add, lang) then
+          local bufnr = args.buf
           require("nvim-treesitter").install({ lang })
+          -- Parser install is async; poll until it's ready then apply highlight.
+          local tries = 0
+          local function wait_and_hl()
+            tries = tries + 1
+            if not vim.api.nvim_buf_is_valid(bufnr) then return end
+            if pcall(vim.treesitter.language.add, lang) then
+              start_hl(bufnr)
+            elseif tries < 40 then
+              vim.defer_fn(wait_and_hl, 500)
+            end
+          end
+          vim.defer_fn(wait_and_hl, 500)
           return
         end
 
-        pcall(vim.treesitter.start, args.buf, lang)
-        vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        start_hl(args.buf)
       end,
     })
   end,
