@@ -7,7 +7,7 @@ return {
   lazy = false,
   build = ":TSUpdate",
   config = function()
-    local ensure_installed = { "lua", "vim", "vimdoc", "query" }
+    local ensure_installed = { "lua", "vim", "vimdoc", "query", "css", "scss" }
 
     require("nvim-treesitter").install(ensure_installed)
 

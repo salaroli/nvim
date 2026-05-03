@@ -53,6 +53,11 @@ return {
       eslint = {},
       html = {},
       cssls = {
+        -- _css.applyCodeAction is a VSCode-only client command; register a no-op
+        -- so Neovim doesn't surface "does not support command" errors.
+        commands = {
+          ["_css.applyCodeAction"] = { function() end },
+        },
         settings = {
           css  = { validate = true, lint = { unknownAtRules = "ignore" } },
           scss = { validate = true, lint = { unknownAtRules = "ignore" } },
