@@ -10,6 +10,7 @@ return {
         return vim.fn.executable("make") == 1
       end,
     },
+    "nvim-telescope/telescope-ui-select.nvim",
   },
   keys = {
     -- Estilo Leader (vim-like)
@@ -36,7 +37,13 @@ return {
         path_display = { "truncate" },
         layout_config = { horizontal = { preview_width = 0.55 } },
       },
+      extensions = {
+        ["ui-select"] = {
+          require("telescope.themes").get_dropdown({}),
+        },
+      },
     })
     pcall(telescope.load_extension, "fzf")
+    pcall(telescope.load_extension, "ui-select")
   end,
 }
